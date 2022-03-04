@@ -34,7 +34,7 @@ module "webserver" {
           "sudo export MYSQL_PASSWORD=admin123",
           "sudo export MYSQL_DATABASE=root",
           "sudo export MYSQL_HOSTNAME=flask-app-db",
-          "sudo export MYSQL_PORT=3306"
+          "sudo export MYSQL_PORT=3306",
           "sudo python3 /FlaskMovieDB/application/app.py"
         ]
 
