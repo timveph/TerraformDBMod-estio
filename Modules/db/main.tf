@@ -7,7 +7,7 @@
 identifier = var.dbname
 
   engine            = var.mysql
-  engine_version    = var.version
+  engine_version    = var.version5
   instance_class    = var.t2micro
   allocated_storage = 1
 
