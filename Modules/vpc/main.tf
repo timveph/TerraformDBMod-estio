@@ -65,7 +65,7 @@ resource "aws_route_table" "routepublic" {
 resource "aws_route_table" "routepublic" {
   vpc_id = aws_vpc.mainvpc.id
   route {
-    cidr_block = "10.0.0.0/16" #var
+    cidr_block = var.vpccidr
     gateway_id = aws_internet_gateway.gw.id
   }
   tags = {
@@ -86,32 +86,32 @@ resource "aws_route_table_association" "routedb" {
 
 # Creating security group for webapp
 resource "aws_security_group" "sgapp" {
-  name        = "app-sg" #var
-  description = "Allow http and https traffic" #var
+  name        = var.appsg
+  description = var.appsgdesc
   vpc_id      = aws_vpc.mainvpc.id
 
   ingress {
-   description = "httpx from VPC" #var
+   description = var.httpx
    from_port = 443 
    to_port = 443 
-   protocol = "tcp" #var
-   cidr_blocks = ["0.0.0.0/0"] 
+   protocol = var.tcp 
+   cidr_blocks = [var.opencidr] 
   }
 
   ingress {
-   description = "httpx from VPC"
+   description = var.httpx
    from_port = 80 
    to_port = 80 
-   protocol = "tcp" 
-   cidr_blocks = ["0.0.0.0/0"]
+   protocol = var.tcp
+   cidr_blocks = [var.opencidr]
   }
 
   ingress {
-   description = "ssh"
+   description = var.ssh
    from_port = 22
    to_port = 22
-   protocol = "tcp"
-   cidr_blocks = ["0.0.0.0/0"]
+   protocol = var.tcp
+   cidr_blocks = [var.opencidr]
     
   }
 
@@ -119,7 +119,7 @@ resource "aws_security_group" "sgapp" {
    to_port = 0 
    from_port = 0
    protocol = -1 
-   cidr_blocks = ["0.0.0.0/0"]
+   cidr_blocks = [var.opencidr]
   }
 
   tags = {
@@ -128,14 +128,14 @@ resource "aws_security_group" "sgapp" {
 }
 
 resource "aws_security_group" "sgdb" {
-  name        = "db-sg" #var
-  description = "Allow only EC2 access" #var
+  name        = var.dbsg
+  description = var.dbsgdesc
   vpc_id      = aws_vpc.mainvpc.id
 
   ingress {
-   description = "httpx from VPC" #var
-   from_port = 443 
-   to_port = 443 
-   protocol = "tcp" #var
+   description = var.httpx
+   from_port = 3306
+   to_port = 3306
+   protocol = var.tcp
    security_groups = [aws_security_group.sgapp.id]
   }
