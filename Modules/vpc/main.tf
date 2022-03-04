@@ -139,3 +139,10 @@ resource "aws_security_group" "sgdb" {
    protocol = var.tcp
    security_groups = [aws_security_group.sgapp.id]
   }
+
+  egress {
+   to_port = 0 
+   from_port = 0
+   protocol = -1 
+   cidr_blocks = [var.opencidr]
+  }
