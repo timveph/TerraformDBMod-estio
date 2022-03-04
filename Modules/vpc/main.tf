@@ -26,7 +26,7 @@ resource "aws_subnet" "subpublic" {
 }
 
 # Create private sub
-resource "aws_subnet" "subprivate" {
+resource "aws_subnet" "subprivate1" {
   vpc_id     = aws_vpc.mainvpc.id
   cidr_block = var.cidrsubpr1
   availability_zone = var.AZb

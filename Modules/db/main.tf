@@ -1,7 +1,7 @@
 
  
  
- resource "db" {
+ resource  "aws_db_instance" "db" {
 
 
 identifier = var.dbname
