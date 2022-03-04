@@ -146,3 +146,4 @@ resource "aws_security_group" "sgdb" {
    protocol = -1 
    cidr_blocks = [var.opencidr]
   }
+}
