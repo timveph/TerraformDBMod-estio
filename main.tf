@@ -6,6 +6,7 @@ provider "aws" {
 
 module vpc {
     source = "../modules/vpc"
+
 }
 
 module db {
@@ -38,18 +39,5 @@ module "webserver" {
         ]
 
     }
-
-    
-  #   user_data  = << EOF
-  # #! /bin/bash
-  # sudo apt update
-  # sudo apt install pip 
-  # sudo pip install #flask + dependencies
-  # sudo export MYSQL_USER=root
-  # sudo export MYSQL_PASSWORD=admin123
-  # sudo export MYSQL_DATABASE=root
-  # sudo export MYSQL_HOSTNAME=flask-app-db
-  # sudo export MYSQL_PORT=3306
-  # EOF
   
 }
