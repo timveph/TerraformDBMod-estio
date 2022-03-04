@@ -5,17 +5,17 @@ provider "aws" {
 }
 
 module vpc {
-    source = "../modules/vpc"
+    source = "./modules/vpc"
 
 }
 
 module db {
-    source = "../modules/db"
+    source = "./modules/db"
 
 }
 
 module "webserver" {  
-    source = "../modules/webserver"
+    source = "./modules/webserver"
 
     vpc_id     = data.aws_vpc.main.id  
     subnet_ids = data.aws_subnet_ids.main.ids
