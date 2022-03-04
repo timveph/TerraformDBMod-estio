@@ -62,14 +62,14 @@ resource "aws_route_table" "routepublic" {
 }
 
 # Creating a private route table
-resource "aws_route_table" "routepublic" {
+resource "aws_route_table" "routeprivate" {
   vpc_id = aws_vpc.mainvpc.id
   route {
     cidr_block = var.vpccidr
     gateway_id = aws_internet_gateway.gw.id
   }
   tags = {
-    Name = "${var.name}.route.public"
+    Name = "${var.name}.route.private"
   }
 }
 
