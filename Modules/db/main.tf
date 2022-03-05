@@ -1,7 +1,8 @@
+module "vpc" {
+  source = "../../modules/vpc"
+}
 
- 
- 
- resource  "aws_db_instance" "db" {
+resource  "aws_db_instance" "db" {
 
 
 identifier = var.dbname
@@ -18,17 +19,20 @@ identifier = var.dbname
 
   iam_database_authentication_enabled = false
 
-  vpc_security_group_ids = var.idsg 
+  vpc_security_group_ids = [module.vpc.security_group_id]
+  
   tags = {
     Name = "default"
   }
+
+  
 
 }
 
 # DB subnet group
  resource "aws_db_subnet_group" "default" {
   name       = "main"
-  subnet_ids = ["${aws_subnet.subprivate1.id}", "${aws_subnet.subprivate2.id}"]
+  subnet_ids = [module.vpc.private_subnet_1, module.vpc.private_subnet_2] #"${aws_subnet.subprivate2.id}"]
 
   tags = {
     Name = "My DB subnet group"

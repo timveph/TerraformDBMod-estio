@@ -12,3 +12,5 @@ variable  "ssh_key" {
  type = string
  default = "New-Key"
 }
+
+

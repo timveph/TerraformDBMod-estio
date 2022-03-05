@@ -1,9 +1,17 @@
+module "vpc" {
+  source = "../../modules/vpc"
+}
+
+module "db" {
+  source = "../../modules/db"
+}
+
 resource "aws_instance" "webserver" {
 	ami = var.ami_app
 	instance_type = "t2.micro"
 	key_name = var.ssh_key
-	subnet_id = aws_subnet.subpublic.id
-    vpc_security_group_ids = [aws_security_group.sgapp.id]
+	subnet_id = module.vpc.public_subnet_id
+    vpc_security_group_ids = [module.vpc.security_group_app_id]
     associate_public_ip_address = true
 
 	user_data = <<EOF
