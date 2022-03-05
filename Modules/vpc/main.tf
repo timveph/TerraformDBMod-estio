@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "gw" {
 # Create public sub
 resource "aws_subnet" "subpublic" {
   vpc_id     = aws_vpc.mainvpc.id
-  cidr_block = var.cidrsubpub
+  cidr_block = var.cidrsubpub1
   availability_zone = var.AZa
   map_public_ip_on_launch = true
 
@@ -62,7 +62,18 @@ resource "aws_route_table" "routepublic" {
 }
 
 # Creating a private route table
-resource "aws_route_table" "routeprivate" {
+resource "aws_route_table" "routeprivate1" {
+  vpc_id = aws_vpc.mainvpc.id
+  route {
+    cidr_block = var.vpccidr
+    gateway_id = aws_internet_gateway.gw.id
+  }
+  tags = {
+    Name = "${var.name}.route.private"
+  }
+}
+
+resource "aws_route_table" "routeprivate2" {
   vpc_id = aws_vpc.mainvpc.id
   route {
     cidr_block = var.vpccidr
@@ -79,9 +90,14 @@ resource "aws_route_table_association" "routeapp" {
   route_table_id = aws_route_table.routepublic.id
 }
 
-resource "aws_route_table_association" "routedb" {
-  subnet_ids = [aws_subnet.subprivate1.id, aws_subnet.subprivate1.id]
-  route_table_id = aws_route_table.routeprivate.id
+resource "aws_route_table_association" "routedb1" {
+  subnet_id = aws_subnet.subprivate1.id
+  route_table_id = aws_route_table.routeprivate1.id
+}
+
+resource "aws_route_table_association" "routedb2" {
+  subnet_id = aws_subnet.subprivate1.id
+  route_table_id = aws_route_table.routeprivate2.id
 }
 
 # Creating security group for webapp

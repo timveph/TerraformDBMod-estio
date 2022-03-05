@@ -20,13 +20,18 @@ identifier = var.dbname
 
   vpc_security_group_ids = var.idsg 
   tags = {
-    
+    Name = "default"
   }
 
-  # DB subnet group
-  create_db_subnet_group = true
-  subnet_ids             = var.subnetids 
+}
 
-  # DB parameter group
-  family = var.family 
+# DB subnet group
+ resource "aws_db_subnet_group" "default" {
+  name       = "main"
+  subnet_ids = ["${aws_subnet.subprivate1.id}", "${aws_subnet.subprivate2.id}"]
+
+  tags = {
+    Name = "My DB subnet group"
+  }   
  }
+ 

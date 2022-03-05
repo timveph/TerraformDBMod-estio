@@ -8,7 +8,7 @@ variable  "vpccidr" {
  default = "10.0.0.0/16"
 }
 
-variable  "cidrsubpub" {
+variable  "cidrsubpub1" {
  type = string
  default = "10.0.1.0/24"
 }
@@ -18,7 +18,7 @@ variable  "cidrsubpr1" {
  default = "10.0.2.0/24"
 }
 
-variable  "cidrsubpub2" {
+variable  "cidrsubpr2" {
  type = string
  default = "10.0.3.0/24"
 }
