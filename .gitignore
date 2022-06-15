@@ -1,5 +1,6 @@
-secret.tfvars
-vars.env
-/modules/db/variables.tf
 .terraform.lock.hcl
-.terraform
+secret.tfvars
+terraform.tfstate.backup
+terraform.tfstate
+.terraform/
+myKey

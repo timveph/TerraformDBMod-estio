@@ -45,12 +45,12 @@ variable  "opencidr" {
 
 variable  "appsg" {
  type = string
- default = "app-sg"
+ default = "app-sg123"
 }
 
 variable  "dbsg" {
  type = string
- default = "db-sg"
+ default = "db-sg123"
 }
 
 variable  "appsgdesc" {

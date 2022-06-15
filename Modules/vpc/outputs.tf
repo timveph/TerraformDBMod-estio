@@ -1,3 +1,7 @@
+output "vpc_id" {
+    value = aws_vpc.mainvpc.id
+}
+
 output "security_group_id" {
     value = aws_security_group.sgdb.id
 }
@@ -16,4 +20,8 @@ output "private_subnet_1" {
 
 output "private_subnet_2" {
     value = aws_subnet.subprivate2.id
+}
+
+output "private_subnet_group" {
+    value = aws_db_subnet_group.maindba.id
 }

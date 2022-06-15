@@ -64,10 +64,6 @@ resource "aws_route_table" "routepublic" {
 # Creating a private route table
 resource "aws_route_table" "routeprivate1" {
   vpc_id = aws_vpc.mainvpc.id
-  route {
-    cidr_block = var.vpccidr
-    gateway_id = aws_internet_gateway.gw.id
-  }
   tags = {
     Name = "${var.name}.route.private"
   }
@@ -75,10 +71,6 @@ resource "aws_route_table" "routeprivate1" {
 
 resource "aws_route_table" "routeprivate2" {
   vpc_id = aws_vpc.mainvpc.id
-  route {
-    cidr_block = var.vpccidr
-    gateway_id = aws_internet_gateway.gw.id
-  }
   tags = {
     Name = "${var.name}.route.private"
   }
@@ -96,7 +88,7 @@ resource "aws_route_table_association" "routedb1" {
 }
 
 resource "aws_route_table_association" "routedb2" {
-  subnet_id = aws_subnet.subprivate1.id
+  subnet_id = aws_subnet.subprivate2.id
   route_table_id = aws_route_table.routeprivate2.id
 }
 
@@ -127,6 +119,15 @@ resource "aws_security_group" "sgapp" {
    from_port = 22
    to_port = 22
    protocol = var.tcp
+   cidr_blocks = [var.opencidr]
+    
+  }
+
+  ingress {
+   description = "dev"
+   from_port = 5000
+   to_port = 5000
+   protocol = "tcp"
    cidr_blocks = [var.opencidr]
     
   }
@@ -163,3 +164,14 @@ resource "aws_security_group" "sgdb" {
    cidr_blocks = [var.opencidr]
   }
 }
+
+resource "aws_db_subnet_group" "maindba" {
+  name       = "maindba"
+  subnet_ids = [aws_subnet.subprivate1.id, aws_subnet.subprivate2.id] #"${aws_subnet.subprivate2.id}"]
+
+  tags = {
+    Name = "My DB subnet group"
+  }   
+ }
+
+

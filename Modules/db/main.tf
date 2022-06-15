@@ -1,41 +1,34 @@
-module "vpc" {
-  source = "../../modules/vpc"
-}
-
 resource  "aws_db_instance" "db" {
 
 
-identifier = var.dbname
+identifier = "mydb"
 
-  engine            = var.mysql
-  engine_version    = var.version5
-  instance_class    = var.t2micro
-  allocated_storage = 1
-
-  db_name  = var.dbname
-  username = var.user          
-  password = var.pass
-  port     = var.sqlport
+    allocated_storage    = 10
+  engine               = "mysql"
+  engine_version       = "5.7"
+  instance_class       = "db.t2.micro"
+  db_name                 = "mydb"
+  username             = "nathan"
+  password             = "password"
+  port     = "3306"
+  parameter_group_name = "default.mysql5.7"
+  skip_final_snapshot  = true
+  
 
   iam_database_authentication_enabled = false
 
-  vpc_security_group_ids = [module.vpc.security_group_id]
-  
+  db_subnet_group_name = var.my_private_subnet_group
+
+  vpc_security_group_ids = [var.my_security_group]
+
   tags = {
     Name = "default"
   }
 
-  
-
 }
 
-# DB subnet group
- resource "aws_db_subnet_group" "default" {
-  name       = "main"
-  subnet_ids = [module.vpc.private_subnet_1, module.vpc.private_subnet_2] #"${aws_subnet.subprivate2.id}"]
 
-  tags = {
-    Name = "My DB subnet group"
-  }   
- }
+
+
+ 
  
