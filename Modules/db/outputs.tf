@@ -14,3 +14,7 @@ output "password" {
 output "db_name" {
     value = aws_db_instance.db.db_name
 }
+
+output "instance_name" {
+    value = aws_db_instance.db.arn
+}

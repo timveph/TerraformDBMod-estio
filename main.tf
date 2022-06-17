@@ -29,6 +29,7 @@ module "webserver" {
     username = module.db.username
     password = module.db.password
     db_name = module.db.db_name
+    database_instance = module.db.instance_name
 
     
     

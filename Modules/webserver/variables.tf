@@ -44,6 +44,11 @@ variable "db_name" {
     default = ""
 }
 
+variable "database_instance" {
+    type = string
+    default = ""
+}
+
 variable "vpc_id" {
     type = string
     default = ""
