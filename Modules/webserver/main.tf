@@ -69,10 +69,8 @@ resource "null_resource" "connect_web2" {
       "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
       "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
       "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2/startup.sh'",
-      "sudo su -l ubuntu -c 'touch /home/ubuntu/hello'",
-      "sudo su -l ubuntu -c 'docker-compose -f /home/ubuntu/FlaskMovieDB2/docker-compose.yaml up -d'"
-
-    ]
+     ]
+     
     connection {
       host        = aws_instance.webserver.public_ip
       type        = "ssh"
