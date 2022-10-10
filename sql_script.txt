@@ -1,0 +1,143 @@
+--- CREATE DATABASE ---
+create database estiolabs;
+use estiolabs;
+
+
+--- CREATE TABLES ---
+
+create table department ( id int not null AUTO_INCREMENT primary key, name varchar(55) );
+create table staff ( id int not null AUTO_INCREMENT primary key, name varchar(55),  dept_id int not null, FOREIGN KEY (dept_id) references department(id) );
+create table customer ( id int not null AUTO_INCREMENT primary key, name varchar(55) );
+create table sales (
+    id int not null AUTO_INCREMENT primary key, 
+    amount decimal(10,2) not null, 
+    customer_id int not null, 
+    staff_id int not null, 
+    item_id int not null,
+    FOREIGN KEY (staff_id) references staff(id), 
+    FOREIGN KEY (customer_id) references customer(id),
+    FOREIGN KEY (item_id) references items(id)
+    );
+
+create table item_type (
+    id int not null auto_increment primary key,
+    item_type varchar(50)
+);
+
+create table items (
+    id int not null auto_increment primary key,
+    item_name varchar(50),
+    price decimal(10,2) not null,
+    type_id int,
+    foreign key (type_id) references item_type (id)
+);
+
+show tables;
+
+--- INSERT DATA ---
+
+insert into department (name) values 
+('HR'),
+('Customer Service'),
+('IT'),
+('Finance'),
+('Legal');
+
+insert into staff (name, dept_id) values 
+('Jon', '3'),
+('Phil', '1'),
+('Nathan', '3'),
+('Alice', '2'),
+('Bob', '3');
+
+insert into customer (name) values 
+('Susan'),
+('Mary'),
+('Frank'),
+('Stephen'),
+('Paul');
+
+insert into sales (amount, customer_id, staff_id, item_id) values
+(10.5, 3, 1, 3),
+(5.5, 4, 2, 4),
+(15, 5, 3, 2),
+(8.5, 2, 1, 1),
+(0.5, 1, 2, 2),
+(15, 5, 3, 2);
+
+insert into item_type (item_type) values 
+('hardware'),
+('software'),
+('home'),
+('food');
+
+insert into items (item_name, price, type_id) values 
+('cpu', 3.2364, '1'),
+('program', 23.3, '2'),
+('steak', 8.99, '4'),
+('antivirus', 15.50, '2');
+
+
+SELECT sum(table_rows) as num_rows, table_name 
+FROM INFORMATION_SCHEMA.TABLES    
+WHERE TABLE_SCHEMA = 'estiolabs' 
+group by 2;
+
+select distinct table_schema, table_name, non_unique, index_name, column_name 
+from information_schema.statistics 
+where table_schema = "estiolabs" 
+order by 2 asc,5 asc;
+
+
+
+
+--- Exercise ---
+
+- create a join statement that shows what each customer bought
+select c.name, i.item_name, count(s.item_id) as number_boughtselect 
+    from customer c
+    left join sales s on c.id = s.customer_id
+    left join items i on s.item_id = i.id
+    group by 1,2
+    order by 1,2;
+
+- create a join statement that shows which staff member each customer is allocated to
+- I didn't create such data
+
+- create a join statement that sums up the total order value per customer
+select c.name, sum(s.amount) as total
+    from customer c
+    inner join sales s on c.id = s.customer_id
+    group by 1
+    order by 1;
+
+- EXTENSION - use the WHERE clause to find people by name AND staff id
+select c.name, i.item_name, count(s.item_id) as number_boughtselect 
+    from customer c
+    left join sales s on c.id = s.customer_id
+    left join items i on s.item_id = i.id
+    left join item_type t on t.id = i.type_id
+    where t.item_type = 'software'
+    group by 1,2
+    order by 1,2;
+
+- EXTENSION - use the HAVING clause to narrow down results based on a given amount (for example greater or less than 30)
+select c.name, sum(s.amount) as total 
+from customer c 
+    inner join 
+    sales s on c.id = s.customer_id 
+group by 1 
+having sum(s.amount) > 10 
+order by 1;
+
+
+- calculate the commission on sales if each salesman gets 10% of total sales (display commission and staff name at least)
+select sum(s.amount) as total_sales, format((sum(s.amount)*.1),2 , '%') as commission, 
+        t.name as staff_name, d.name as department_name
+from sales s
+inner join staff t
+    on s.staff_id = t.id
+left join department d
+    on t.dept_id = d.id
+ group by 3
+ order by 2 desc;
