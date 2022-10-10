@@ -13,6 +13,15 @@ resource "aws_instance" "webserver" {
   sudo echo "PASSWORD=${var.password}" >> /etc/environment
   sudo echo "ENDPOINT=${var.get_db_endpoint}" >> /etc/environment
   sudo echo "NAME=${var.db_name}" >> /etc/environment
+  sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git
+  sudo chown ubuntu -R /home/ubuntu/FlaskMovieDB2-estio/
+  sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py
+  sudo apt-get install mysql-server -y
+  sudo apt-get install ansible -y
+  sudo add-apt-repository --yes --update ppa:ansible/ansible
+  ansible-playbook /home/ubuntu/ansible-project/playbook.yaml
+  sudo chown ubuntu /var/run/docker.sock
+  . /home/ubuntu/FlaskMovieDB2-estio/startup.sh
   EOL
   tags = {
     Name = "estio"
@@ -59,18 +68,19 @@ resource "null_resource" "file_transfer" {
 resource "null_resource" "connect_web2" {
   provisioner "remote-exec" {
     inline = [
-      "sudo su -l ubuntu -c 'sudo apt-get update -y'",
-      "sudo su -l ubuntu -c 'sudo apt-get upgrade --fix-missing -y'",
-      "sudo su -l ubuntu -c 'sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git'",
-      "sudo su -l ubuntu -c 'sudo chown ubuntu -R /home/ubuntu/FlaskMovieDB2-estio/'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
-      "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py'",
-      "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
-      # "sudo su -l ubuntu -c 'sudo apt-get install mysql-client-core-8.0 -y'",
-      "sudo su -l ubuntu -c 'sudo apt-get install ansible -y'", 
-      "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
-      "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
-      "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
-      "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2-estio/startup.sh'",
+      "sudo su -l ubuntu -c 'echo In connect_web2'",
+      # "sudo su -l ubuntu -c 'sudo apt-get update -y'",
+      # "sudo su -l ubuntu -c 'sudo apt-get upgrade --fix-missing -y'",
+      # "sudo su -l ubuntu -c 'sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git'",
+      # "sudo su -l ubuntu -c 'sudo chown ubuntu -R /home/ubuntu/FlaskMovieDB2-estio/'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
+      # "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py'",
+      # "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
+      # # "sudo su -l ubuntu -c 'sudo apt-get install mysql-client-core-8.0 -y'",
+      # "sudo su -l ubuntu -c 'sudo apt-get install ansible -y'", 
+      # "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
+      # "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
+      # "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
+      # "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2-estio/startup.sh'",
      ]
 
 # module.webserver.null_resource.connect_web2 (remote-exec): Err:2 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-client-core-8.0 amd64 8.0.29-0ubuntu0.20.04.3
