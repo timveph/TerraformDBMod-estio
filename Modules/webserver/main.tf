@@ -9,9 +9,6 @@ resource "aws_instance" "webserver" {
   user_data = <<-EOL
   #!/bin/bash 
   sudo apt-get update -y
-  sudo touch /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
-  sudo chown ubuntu /home/ubuntu/username /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
-  sudo chgrp ubuntu /home/ubuntu/username /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
   sudo echo "USERNAME=${var.username}" >> /etc/environment
   sudo echo "PASSWORD=${var.password}" >> /etc/environment
   sudo echo "ENDPOINT=${var.get_db_endpoint}" >> /etc/environment
@@ -64,16 +61,16 @@ resource "null_resource" "connect_web2" {
     inline = [
       "sudo su -l ubuntu -c 'sudo apt-get update -y'",
       "sudo su -l ubuntu -c 'sudo apt-get upgrade --fix-missing -y'",
-      "sudo su -l ubuntu -c 'sudo git clone https://github.com/nathanforester/FlaskMovieDB2.git'",
-      "sudo su -l ubuntu -c 'sudo chown -R ubuntu /home/ubuntu/FlaskMovieDB2'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
-      "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2/startup.sh /home/ubuntu/FlaskMovieDB2/create.py /home/ubuntu/FlaskMovieDB2/app.py'",
+      "sudo su -l ubuntu -c 'sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git'",
+      "sudo su -l ubuntu -c 'sudo chown -R ubuntu /home/ubuntu/FlaskMovieDB2-estio'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
+      "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py'",
       "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
       "sudo su -l ubuntu -c 'sudo apt-get install software-properties-common'",
       "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
       "sudo su -l ubuntu -c 'sudo apt-get install ansible -y'", 
       "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
       "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
-      "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2/startup.sh'",
+      "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2-estio/startup.sh'",
      ]
 
 # module.webserver.null_resource.connect_web2 (remote-exec): Err:2 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-client-core-8.0 amd64 8.0.29-0ubuntu0.20.04.3
