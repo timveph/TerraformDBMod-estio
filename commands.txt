@@ -1,0 +1,23 @@
+
+# connect to DB using endpoint
+mysql -h <endpoint> -P 3306 -u phil -p
+
+
+# initialise
+terraform init
+
+# validate template
+terraform validate
+
+# plan
+terraform plan -var-file="secret.tfvars"
+
+# deploy template
+terraform apply -var-file="secret.tfvars"
+terraform apply -var-file="secret.tfvars" -input=false  
+
+# destroy - tear down 
+terraform destroy -var-file="secret.tfvars"
+
+  # delete a specific resource
+  terraform destroy -target aws_instance.host -var-file="secret.tfvars"
