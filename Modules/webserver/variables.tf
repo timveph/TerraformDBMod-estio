@@ -5,7 +5,7 @@ variable "ami_app" {
 
 variable "ssh_key" {
     type = string
-    default = "myKey"
+    default = "estio-labs"
 }
 
 variable "my_security_group_id" {

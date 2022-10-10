@@ -3,4 +3,4 @@ secret.tfvars
 terraform.tfstate.backup
 terraform.tfstate
 .terraform/
-myKey
+myPrivateKey

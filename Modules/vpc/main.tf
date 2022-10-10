@@ -170,7 +170,7 @@ resource "aws_db_subnet_group" "maindba" {
   subnet_ids = [aws_subnet.subprivate1.id, aws_subnet.subprivate2.id] #"${aws_subnet.subprivate2.id}"]
 
   tags = {
-    Name = "My DB subnet group"
+    Name = var.name
   }   
  }
 

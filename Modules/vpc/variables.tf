@@ -1,6 +1,6 @@
 variable "name" {
  type = string
- default= "Nathan.F"
+ default= "estio"
 }
 
 variable  "vpccidr" {

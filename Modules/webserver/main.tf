@@ -8,7 +8,7 @@ resource "aws_instance" "webserver" {
 	security_groups = [var.my_security_group_id]
   user_data = <<-EOL
   #!/bin/bash 
-  sudo apt update
+  sudo apt-get update -y
   sudo touch /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
   sudo chown ubuntu /home/ubuntu/username /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
   sudo chgrp ubuntu /home/ubuntu/username /home/ubuntu/username /home/ubuntu/password /home/ubuntu/endpoint /home/ubuntu/name
@@ -17,6 +17,9 @@ resource "aws_instance" "webserver" {
   sudo echo "ENDPOINT=${var.get_db_endpoint}" >> /etc/environment
   sudo echo "NAME=${var.db_name}" >> /etc/environment
   EOL
+  tags = {
+    Name = "estio"
+  }
   depends_on = [var.database_instance]
   
 }
@@ -30,7 +33,7 @@ resource "null_resource" "connect_web" {
       host        = aws_instance.webserver.public_ip
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("./myKey")
+      private_key = file("./myPrivateKey")
     }
 
    }
@@ -45,7 +48,7 @@ resource "null_resource" "file_transfer" {
         connection {
             type        = "ssh"
             user        = "ubuntu"
-            private_key = "${file("myKey")}"
+            private_key = "${file("myPrivateKey")}"
             host        = aws_instance.webserver.public_ip
         }
     }
@@ -59,23 +62,44 @@ resource "null_resource" "file_transfer" {
 resource "null_resource" "connect_web2" {
   provisioner "remote-exec" {
     inline = [
+      "sudo su -l ubuntu -c 'sudo apt-get update -y'",
+      "sudo su -l ubuntu -c 'sudo apt-get upgrade --fix-missing -y'",
       "sudo su -l ubuntu -c 'sudo git clone https://github.com/nathanforester/FlaskMovieDB2.git'",
-      "sudo su -l ubuntu -c 'sudo chown -R /home/ubuntu/FlaskMovieDB2'",
+      "sudo su -l ubuntu -c 'sudo chown -R ubuntu /home/ubuntu/FlaskMovieDB2'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
       "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2/startup.sh /home/ubuntu/FlaskMovieDB2/create.py /home/ubuntu/FlaskMovieDB2/app.py'",
-      "sudo su -l ubuntu -c 'sudo apt install mysql-server -y'",
-      "sudo su -l ubuntu -c 'sudo apt install software-properties-common'",
+      "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
+      "sudo su -l ubuntu -c 'sudo apt-get install software-properties-common'",
       "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
-      "sudo su -l ubuntu -c 'sudo apt install ansible -y'", 
+      "sudo su -l ubuntu -c 'sudo apt-get install ansible -y'", 
       "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
       "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
       "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2/startup.sh'",
      ]
+
+# module.webserver.null_resource.connect_web2 (remote-exec): Err:2 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-client-core-8.0 amd64 8.0.29-0ubuntu0.20.04.3
+# module.webserver.null_resource.connect_web2 (remote-exec):   404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): 
+# module.webserver.null_resource.connect_web2 (remote-exec): Err:3 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-client-8.0 amd64 8.0.29-0ubuntu0.20.04.3
+# module.webserver.null_resource.connect_web2 (remote-exec):   404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): 
+# module.webserver.null_resource.connect_web2 (remote-exec): Err:7 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-server-core-8.0 amd64 8.0.29-0ubuntu0.20.04.3
+# module.webserver.null_resource.connect_web2 (remote-exec):   404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): 
+# module.webserver.null_resource.connect_web2 (remote-exec): Err:8 http://security.ubuntu.com/ubuntu focal-updates/main amd64 mysql-server-8.0 amd64 8.0.29-0ubuntu0.20.04.3
+# module.webserver.null_resource.connect_web2 (remote-exec):   404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): 
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.29-0ubuntu0.20.04.3_amd64.deb  404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-client-8.0_8.0.29-0ubuntu0.20.04.3_amd64.deb  404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.29-0ubuntu0.20.04.3_amd64.deb  404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server-8.0_8.0.29-0ubuntu0.20.04.3_amd64.deb  404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server_8.0.29-0ubuntu0.20.04.3_all.deb  404  Not Found [IP: 91.189.91.38 80]
+# module.webserver.null_resource.connect_web2 (remote-exec): E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
      
     connection {
       host        = aws_instance.webserver.public_ip
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("./myKey")
+      private_key = file("./myPrivateKey")
     }
 
    }
