@@ -62,7 +62,7 @@ resource "null_resource" "connect_web2" {
       "sudo su -l ubuntu -c 'sudo apt-get update -y'",
       "sudo su -l ubuntu -c 'sudo apt-get upgrade --fix-missing -y'",
       "sudo su -l ubuntu -c 'sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git'",
-      "sudo su -l ubuntu -c 'sudo chown -R ubuntu /home/ubuntu/FlaskMovieDB2-estio'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
+      "sudo su -l ubuntu -c 'sudo chown ubuntu -R /home/ubuntu/FlaskMovieDB2-estio/'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
       "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py'",
       "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
       "sudo su -l ubuntu -c 'sudo apt-get install software-properties-common'",
