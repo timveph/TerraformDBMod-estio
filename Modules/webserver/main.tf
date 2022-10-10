@@ -64,10 +64,9 @@ resource "null_resource" "connect_web2" {
       "sudo su -l ubuntu -c 'sudo git clone https://github.com/timveph/FlaskMovieDB2-estio.git'",
       "sudo su -l ubuntu -c 'sudo chown ubuntu -R /home/ubuntu/FlaskMovieDB2-estio/'", #chown: missing operand after ‘/home/ubuntu/FlaskMovieDB2’
       "sudo su -l ubuntu -c 'sudo chown ubuntu /home/ubuntu/FlaskMovieDB2-estio/startup.sh /home/ubuntu/FlaskMovieDB2-estio/create.py /home/ubuntu/FlaskMovieDB2-estio/app.py'",
-      "sudo su -l ubuntu -c 'sudo apt-get install mysql-server -y'",
-      "sudo su -l ubuntu -c 'sudo apt-get install software-properties-common'",
-      "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
+      "sudo su -l ubuntu -c 'sudo apt-get install mysql-client-core-8.0 -y'",
       "sudo su -l ubuntu -c 'sudo apt-get install ansible -y'", 
+      # "sudo su -l ubuntu -c 'sudo add-apt-repository --yes --update ppa:ansible/ansible'",
       "sudo su -l ubuntu -c 'ansible-playbook /home/ubuntu/ansible-project/playbook.yaml'",
       "sudo su -l ubuntu -c 'sudo chown ubuntu /var/run/docker.sock'",
       "sudo su -l ubuntu -c '. /home/ubuntu/FlaskMovieDB2-estio/startup.sh'",
